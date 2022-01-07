@@ -1,0 +1,8 @@
+include *.txt *.md
+include pyproject.toml
+include .editorconfig
+include .flake8
+include LICENSE.txt
+include Makefile
+include MANIFEST.in
+include test/*.py
