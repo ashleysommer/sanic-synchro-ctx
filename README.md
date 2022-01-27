@@ -35,6 +35,7 @@ $ pip3 install "sanic-synchro-ctx" "aioredis>=2.0" "hiredis>=1.0"
 * Works with Python 3.8 and greater.
 * Works with Sanic v21.9.0 and greater.
 * If you are installing the redis library separately, use aioredis >= 2.0
+* If you have sanic-ext installed, you must use Sanic-Synchro-CTX as an extension (see simple example below).
 
 
 ## Usage
@@ -63,6 +64,32 @@ def increment(request: Request):
     counter = request.app.ctx.synchro.counter
     print("counter: {}".format(counter), flush=True)
     return html(f"<p>count: {counter}</p>")
+
+app.run("127.0.0.1", port=8000, workers=8)
+```
+
+_Note: If you have Sanic-ext installed, you **must** use Sanic-Synchro-CTX in conjunction with Sanic-ext_
+
+Sanic-ext example:
+```python
+from sanic_ext import Extend
+from sanic_synchro_ctx import SanicSynchroCtx
+
+app = Sanic("simple")
+Extend(app, extensions=[SanicSynchroCtx])
+
+@app.after_server_start
+def handler(app, loop=None):
+    # This will only set this value if it doesn't already exist
+    # So only the first worker will set this value
+    app.ctx.synchro.set_default({"counter": 0})
+
+@app.route("/")
+def index(request: Request):
+    counter = request.app.ctx.synchro.increment("counter")
+
+    print("counter: {}".format(counter), flush=True)
+    return html("<p>Hello World</p>")
 
 app.run("127.0.0.1", port=8000, workers=8)
 ```

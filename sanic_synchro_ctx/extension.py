@@ -37,7 +37,7 @@ class SanicSynchroCtx(Extension):
 
     def __init__(self, app: Sanic, config: Optional[Config] = None, *args, **kwargs):
         if SANIC_21_9_0 > SANIC_VERSION:
-            raise RuntimeError("You cannot use this version of Sanic-Synchro-Ctx with " "Sanic earlier than v21.9.0")
+            raise RuntimeError("You cannot use this version of Sanic-Synchro-Ctx with Sanic earlier than v21.9.0")
         self._options = kwargs
         if use_ext:
             super(SanicSynchroCtx, self).__init__(app, config)
